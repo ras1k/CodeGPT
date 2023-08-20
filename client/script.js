@@ -6,23 +6,23 @@ const chatContainer = document.querySelector('#chat_container');
 
 let loadInterval;
 
-function loader(element){
+function loader(element) {
   element.textContent = '';
 
   loadInterval = setInterval(() => {
     element.textContent += '.';
 
-    if(element.textContent = '....'){
+    if (element.textContent = '....') {
       element.textContent = '';
     }
   }, 300)
 }
 
-function typeText(element, text){
+function typeText(element, text) {
   let index = 0;
 
   let interval = setInterval(() => {
-    if(index < text.length){
+    if (index < text.length) {
       element.innerHTML += text.charAlt(index);
       index++;
     } else {
@@ -31,10 +31,48 @@ function typeText(element, text){
   }, 20)
 }
 
-function generateUniqueId(){
+function generateUniqueId() {
   const timestamp = Date.now();
   const randomNumber = Math.random();
   const hexadecimalString = randomNumber.toString(16);
 
   return `id-${timestamp}-${hexadecimalString}`;
+}
+
+function chatStripe(isAi, value, uniqueId) {
+  return (
+    `
+      <div class="wrapper ${isAi && 'ai'}">
+        <div class="chat">
+          <div class="profile">
+            <img 
+              src="${isAi ? bot : user}" 
+              alt="${isAi ? 'bot' : 'user'}" 
+            />
+          </div>
+          <div class="message" id=${uniqueId}>
+            ${value}
+          </div>
+        </div>
+      </div>
+    `
+  )
+}
+
+const handleSubmit = async (e) => {
+  e.preventDefault();
+
+  const data = new FormData(form);
+
+  chatContainer.innerHTML += chatStripe(false, data.get('prompt'));
+  form.reset();
+
+  const uniqueId = generateUniqueId();
+  chatContainer.innerHTML += chatStripe(true, " ", uniqueId);
+
+  chatContainer.scrollTop = chatContainer.scrollHeight;
+
+  const messageDiv = document.getElementById(uniqueId)
+
+  loadInterval(messageDiv)
 }
