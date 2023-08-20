@@ -4,18 +4,20 @@ import user from './assets/user.svg'
 const form = document.querySelector('form');
 const chatContainer = document.querySelector('#chat_container');
 
-let loadInterval;
+let loadInterval
 
 function loader(element) {
-  element.textContent = '';
+    element.textContent = ''
 
-  loadInterval = setInterval(() => {
-    element.textContent += '.';
+    loadInterval = setInterval(() => {
+        // Update the text content of the loading indicator
+        element.textContent += '.';
 
-    if (element.textContent = '....') {
-      element.textContent = '';
-    }
-  }, 300)
+        // If the loading indicator has reached three dots, reset it
+        if (element.textContent === '.....') {
+            element.textContent = '';
+        }
+    }, 300);
 }
 
 function typeText(element, text) {
@@ -74,5 +76,12 @@ const handleSubmit = async (e) => {
 
   const messageDiv = document.getElementById(uniqueId)
 
-  loadInterval(messageDiv)
+  loader(messageDiv)
 }
+
+form.addEventListener('submit', handleSubmit);
+form.addEventListener('keyup', (e) => {
+  if(e.keyCode === 13){
+    handleSubmit(e);
+  }
+})
